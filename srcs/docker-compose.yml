@@ -18,7 +18,8 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ./.docker/logs/nginx:/var/lib/nginx/logs
+      - wp:/var/www/html
+      - log_nginx:/var/log/nginx
     # depends_on:
     #   - wordpress
     #   - mariadb
@@ -39,6 +40,8 @@ services:
       - inception-network
     expose:
       - 9000
+    volumes:
+      - wp:/var/www/html
     <<: *logging
 
   mariadb:
@@ -51,8 +54,7 @@ services:
       - 3306
     volumes:
       - db:/var/lib/mysql
-      - ./.docker/data/mariadb:/var/lib/mysql
-      - ./.docker/logs/mariadb:/var/log/mysql
+      - log_mariadb:/var/log/mysql 
     networks:
       - inception-network
     <<: *logging
@@ -60,7 +62,28 @@ services:
 # --- Volumes & Networks definitions ---
 volumes:
   db:
-  wordpress:
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_DIR}/mariadb
+  wp:
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_DIR}/wordpress
+
+  log_nginx:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${LOG_DIR}/nginx
+  log_mariadb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${LOG_DIR}/mariadb
 
 networks:
   inception-network:

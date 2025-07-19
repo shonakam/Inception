@@ -1,16 +1,14 @@
-NAME		:= Inception
-UNAME		= $(uname -a)
-SERVICES	:= nginx wordpress mariadb
-VOLUMES		:= db wp
-DATA_DIR	:= ./srcs/.docker/data
-LOG_DIR		:= ./srcs/.docker/logs
+NAME				:= Inception
+UNAME				= $(uname -a)
+export DATA_DIR		:= $(CURDIR)/srcs/.docker/data
+export LOG_DIR		:= $(CURDIR)/srcs/.docker/logs
 
 $(NAME): up
 
 all: $(NAME)
 
 up:
-	@mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress $(DATA_DIR)/nginx
+	@mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
 	@mkdir -p $(LOG_DIR)/mariadb $(LOG_DIR)/wordpress $(LOG_DIR)/nginx
 	docker-compose -f srcs/docker-compose.yml up --build -d
 	bash srcs/requirements/tools/hosts.sh create
@@ -21,11 +19,13 @@ down:
 
 clean: down
 	@rm -rf $(DATA_DIR)
+	@rm -rf $(LOG_DIR)
 
 fclean:
 	docker-compose -f srcs/docker-compose.yml down --rmi local -v
 	docker system prune -af
 	@rm -rf $(DATA_DIR)
+	@rm -rf $(LOG_DIR)
 	bash srcs/requirements/tools/hosts.sh delete
 
 ps:
@@ -47,3 +47,6 @@ debug_nginx:
 
 debug_wordpress:
 	@docker-compose -f srcs/docker-compose.yml exec wordpress sh
+
+logs_wordpress:
+	@docker-compose -f srcs/docker-compose.yml logs wordpress
