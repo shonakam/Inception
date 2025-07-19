@@ -6,7 +6,7 @@ srcs/.docker
 # 
 srcs/.secrets/*
 !srcs/.secrets/.gitkeep
-!srcs/.secrets/certs/*
+!srcs/.secrets/certs/
 !srcs/.secrets/db_password.txt
 
 .DS_Store
