@@ -7,11 +7,11 @@ WP_ACCESS_PORT="${WP_HOST_PORT:-80}"
 
 # WP_HOME_URL と WP_SITEURL_URL からポート80を明示的に削除するロジックを追加
 if [ "$WP_ACCESS_PORT" = "80" ]; then
-    WP_HOME_URL="http://${WP_DOMAIN}"
-    WP_SITEURL_URL="http://${WP_DOMAIN}"
+    WP_HOME_URL="https://${WP_DOMAIN}"
+    WP_SITEURL_URL="https://${WP_DOMAIN}"
 else
-    WP_HOME_URL="http://${WP_DOMAIN}:${WP_ACCESS_PORT}"
-    WP_SITEURL_URL="http://${WP_DOMAIN}:${WP_ACCESS_PORT}"
+    WP_HOME_URL="https://${WP_DOMAIN}:${WP_ACCESS_PORT}"
+    WP_SITEURL_URL="https://${WP_DOMAIN}:${WP_ACCESS_PORT}"
 fi
 
 WP_TITLE="${WP_TITLE:-My Awesome WordPress Site}"

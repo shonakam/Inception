@@ -10,6 +10,7 @@ all: $(NAME)
 up:
 	@mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
 	@mkdir -p $(LOG_DIR)/mariadb $(LOG_DIR)/wordpress $(LOG_DIR)/nginx
+	bash srcs/requirements/tools/certs.sh
 	docker-compose -f srcs/docker-compose.yml up --build -d
 	bash srcs/requirements/tools/hosts.sh create
 

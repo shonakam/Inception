@@ -27,6 +27,9 @@ services:
     # environment:
     networks:
       - inception-network
+    secrets:
+      - nginx_certificate
+      - nginx_private_key 
     <<: *logging
 
   wordpress:
@@ -89,7 +92,11 @@ networks:
   inception-network:
     name: inception-network
 
-# secrets:
+secrets:
+  nginx_certificate:
+    file: .secrets/certs/shonakam.42.fr.crt
+  nginx_private_key:
+    file: .secrets/certs/shonakam.42.fr.key
 
 # --- References ---
 # https://docs.docker.com/reference/compose-file/services/
