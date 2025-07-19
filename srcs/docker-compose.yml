@@ -1,0 +1,73 @@
+# --- General configurations ---
+# x-prefix and yaml anchor
+
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-file: "10"
+      max-size: "100m"
+
+# --- Project containers ---
+services:
+  nginx:
+    init: true
+    build: ./requirements/nginx
+    container_name: inception-nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./.docker/logs/nginx:/var/lib/nginx/logs
+    # depends_on:
+    #   - wordpress
+    #   - mariadb
+    restart: always
+    # environment:
+    networks:
+      - inception-network
+    <<: *logging
+
+  wordpress:
+    init: true
+    build: ./requirements/wordpress
+    container_name: inception-wordpress
+    # depends_on: mariadb
+    restart: always
+    # environment:
+    networks:
+      - inception-network
+    expose:
+      - 9000
+    <<: *logging
+
+  mariadb:
+    init: true
+    build: ./requirements/mariadb
+    container_name: inception-mariadb
+    restart: unless-stopped
+    # environment:
+    expose:
+      - 3306
+    volumes:
+      - db:/var/lib/mysql
+      - ./.docker/data/mariadb:/var/lib/mysql
+      - ./.docker/logs/mariadb:/var/log/mysql
+    networks:
+      - inception-network
+    <<: *logging
+
+# --- Volumes & Networks definitions ---
+volumes:
+  db:
+  wordpress:
+
+networks:
+  inception-network:
+    name: inception-network
+
+# secrets:
+
+# --- References ---
+# https://docs.docker.com/reference/compose-file/services/
+# https://docs.docker.com/reference/compose-file/extension/  -- x-prefix and yaml anchor
